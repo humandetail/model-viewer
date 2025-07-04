@@ -169,7 +169,7 @@
         <span>3D 模型查看器</span>
       </div>
       <div class="controls">
-        <input type="file" id="fileInput" accept=".glb,.gltf,.fbx,.obj,.mtl">
+        <input type="file" id="fileInput" accept=".glb,.gltf,.fbx,.obj,.mtl,.stl">
         <button id="exportBtn">
           <i>💾</i>
           <span>导出 GLB</span>
@@ -188,6 +188,7 @@
       <p>2. 支持格式: GLB, GLTF, FBX, OBJ, MTL</p>
       <p>3. 鼠标拖拽旋转视图，滚轮缩放</p>
       <p>4. 导出按钮可将当前模型保存为GLB</p>
+      <p>5. OBJ格式如果有MTL文件，需要先上传MTL文件，然后再上传OBJ</p>
     </div>
   </div>
   <script type="module" src="/src/index.ts"></script>

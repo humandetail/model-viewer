@@ -6,6 +6,7 @@ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js'
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js'
+import { STLLoader } from 'three/addons/loaders/STLLoader.js'
 
 // 创建场景
 const scene = new THREE.Scene()
@@ -66,6 +67,7 @@ const gltfLoader = new GLTFLoader()
 const fbxLoader = new FBXLoader()
 const objLoader = new OBJLoader()
 const mtlLoader = new MTLLoader()
+const stlLoader = new STLLoader()
 
 let loadedModel: THREE.Object3D | null = null
 let gui: GUI | null = null
@@ -272,6 +274,22 @@ async function loadModelFromFile(file: File) {
           // eslint-disable-next-line no-alert
           alert(`FBX解析错误: ${parseError?.message ?? ''}`)
         }
+      }
+      reader.readAsArrayBuffer(file)
+    }
+    else if (ext === 'stl') {
+      reader.onload = (e) => {
+        const arrayBuffer = e.target?.result as ArrayBuffer
+        const geometry = stlLoader.parse(arrayBuffer)
+        const material = new THREE.MeshStandardMaterial({ color: 0x999999 })
+        const mesh = new THREE.Mesh(geometry, material)
+        mesh.castShadow = true
+        mesh.receiveShadow = true
+
+        loadedModel = mesh
+        scene.add(mesh)
+        setupModel(mesh)
+        hideStatus()
       }
       reader.readAsArrayBuffer(file)
     }
