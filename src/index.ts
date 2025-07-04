@@ -100,7 +100,7 @@ function animate() {
 animate()
 
 // 初始化GUI
-function initGUI(name: string, material: THREE.Material) {
+function initGUI(name: string, material: THREE.Material, mesh: THREE.Mesh) {
   if (!material || !('color' in material))
     return
 
@@ -112,10 +112,21 @@ function initGUI(name: string, material: THREE.Material) {
     color: `#${(material.color as THREE.Color).getHexString()}`,
   }
 
-  const folder = gui.addFolder(name)
+  const meshConfig = {
+    name: mesh.name || '未命名',
+  }
+
+  const folder = gui.addFolder(mesh.name || name)
+
+  folder.add(meshConfig, 'name').name('name').onFinishChange((newName: string) => {
+    mesh.name = newName
+    folder.title(newName) // 更新 GUI 的 folder 名称
+  })
+
   folder.addColor(colorConfig, 'color').name('颜色').onChange((value) => {
     (material.color as THREE.Color).set(value)
   })
+
   folder.open()
 }
 
@@ -359,11 +370,11 @@ function setupModel(object: THREE.Object3D) {
       if (Array.isArray(material)) {
         material.forEach((m, i) => {
           if (m && 'color' in m)
-            initGUI(`${child.name || '材质'}-${i}`, m)
+            initGUI(`${child.name || '材质'}-${i}`, m, child)
         })
       }
       else if (material && 'color' in material) {
-        initGUI(child.name || '材质', material)
+        initGUI(child.name || '材质', material, child)
       }
     }
   })
